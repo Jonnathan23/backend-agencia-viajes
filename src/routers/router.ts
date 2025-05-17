@@ -5,6 +5,8 @@ import { userExists } from "../auth/middleware/user.mid";
 import { UserController } from "../auth/controllers/User.controller";
 import { flightExists } from "../travels/middlewares/flights.mid";
 import { FlightController } from "../travels/controllers/Flight.controller";
+import { reservationExists } from "../travels/middlewares/reservations.mid";
+import { ReservationController } from "../travels/controllers/Reservation.controller";
 
 const router = Router();
 
@@ -118,7 +120,7 @@ router.post('/flights',
 )
 
 // Puts
-router.put('/flights',
+router.put('/flights/update/:flt_id',
     body('flt_flight_number')
         .trim()
         .notEmpty().withMessage('No puede ir vacio el numero de vuelo'),
@@ -145,7 +147,55 @@ router.put('/flights',
     FlightController.updateFlight
 )
 
+// Patch
+router.patch('/flights/state/:flt_id',
+    body('flt_is_active')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el '),
+    handleInputErrors,
+    FlightController.updateFlightState
+)
+
 // Deletes
 router.delete('/flights/:flt_id', FlightController.deleteFlight)
+
+
+// |---------------| | Reservations | |---------------|
+
+router.param('res_id',
+    param('res_id')
+        .trim()
+        .isString().withMessage('Identificador no válido')
+        .isUUID(4).withMessage('Identificador no válido'),
+)
+
+router.param('res_id', handleInputErrors)
+router.param('res_id', reservationExists)
+
+// Gets
+router.get('/reservations', ReservationController.getAllReservations)
+router.get('/reservations/:res_id', ReservationController.getReservationById)
+
+// Posts
+router.post('/reservations/create/:usr_id/:flt_id',
+    body('res_reserved_at')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio la hora de la reserva'),
+    body('res_status')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el estado de la reserva'),
+    body('res_count_consumer')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacia la cantidad de personas de la reserva')
+        .isInt({ min: 1 }).withMessage('No puede ir vacia la cantidad de personas de la reserva'),
+
+)
+
+//Patch
+router.post('/reservations/state/:usr_id/:flt_id',
+
+    handleInputErrors,
+    ReservationController.updateReservation
+)
 
 export default router;

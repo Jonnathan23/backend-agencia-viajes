@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, Validate, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, Validate, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
+import Reservation from '../../travels/models/reservations.model';
 
 export interface UserI extends Model {
     usr_id: string,
@@ -17,7 +18,7 @@ class User extends Model<UserI> {
     @Column({
         type: DataType.UUID,
         allowNull: false,
-        primaryKey: true,        
+        primaryKey: true,
     })
     declare usr_id: string;
 
@@ -39,6 +40,9 @@ class User extends Model<UserI> {
         unique: true
     })
     declare usr_email: string;
+
+    @HasMany(() => Reservation)
+    declare reservations: Reservation[]
 
 }
 

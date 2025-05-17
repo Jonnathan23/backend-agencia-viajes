@@ -27,7 +27,7 @@ export class FlightController {
             const newFlight = new Flight(req.body)
             await newFlight.save()
             res.status(201).send('Vuelo creado')
-        } catch(error) {
+        } catch (error) {
             res.status(500).json({ errors: error })
         }
     }
@@ -38,7 +38,19 @@ export class FlightController {
             const flightFound = req.flight
             await flightFound.update(req.body)
             res.status(200).send('Vuelo actualizado')
-        } catch(error) {
+        } catch (error) {
+            res.status(500).json({ errors: error })
+        }
+    }
+
+    //Patch
+    static updateFlightState = async (req: Request, res: Response) => {
+        try {
+            const flightFound = req.flight
+            flightFound.flt_is_active = req.body.flt_state
+            await flightFound.save()
+            res.status(200).send('Vuelo actualizado')
+        } catch (error) {
             res.status(500).json({ errors: error })
         }
     }
@@ -49,7 +61,7 @@ export class FlightController {
             const flightFound = req.flight
             await flightFound.destroy()
             res.status(200).send('Vuelo eliminado')
-        } catch(error) {
+        } catch (error) {
             res.status(500).json({ errors: error })
         }
     }

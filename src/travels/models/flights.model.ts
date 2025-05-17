@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript'
+import Reservation from './reservations.model'
 
 
 export const flightIsActive = {
@@ -85,6 +86,9 @@ class Flight extends Model {
         defaultValue: flightIsActive.TRUE
     })
     declare flt_is_active: FlightIsActive
+
+    @HasMany(() => Reservation)
+    declare reservations: Reservation[]
 
 }
 
