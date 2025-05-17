@@ -49,11 +49,6 @@ router.post('/users',
 
 // Puts
 router.put('/users/:usr_id',
-    body('usr_id')
-        .trim()
-        .notEmpty().withMessage('Identificador no valido')
-        .isString().withMessage('Identificador no válido')
-        .isUUID(4).withMessage('Identificador no válido'),
     body('usr_first_name')
         .trim()
         .notEmpty().withMessage('El nombre es requerido')

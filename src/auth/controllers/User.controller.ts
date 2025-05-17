@@ -15,6 +15,18 @@ export class UserController {
     // Posts
     static createUser = async (req: Request, res: Response) => {
         try {
+            const userFound = await User.findOne({ where: { usr_email: req.body.usr_email } })
+            if (userFound) {
+                res.status(400).json({ errors: 'Ya existe un usuario con ese email' })
+                return
+            }
+            
+            const userFound2 = await User.findOne({ where: { usr_id: req.body.usr_id } })
+            if (userFound2) {
+                res.status(400).json({ errors: 'Ya existe un usuario con ese id' })
+                return
+            }
+
             const newUser = new User(req.body)
             await newUser.save()
             res.status(201).send('Usuario creado')

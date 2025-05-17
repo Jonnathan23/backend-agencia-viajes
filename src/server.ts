@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import db from './config/db';
 import { corsConfig } from './config/cors';
+import router from './routers/router';
 
 dotenv.config()
 
@@ -26,6 +27,8 @@ server.use(cors(corsConfig))
 
 server.use(morgan('dev'))
 server.use(express.json());
+
+server.use('/api/travels', router)
 
 
 export default server;
