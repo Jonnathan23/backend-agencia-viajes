@@ -57,7 +57,7 @@ class Reservation extends Model {
         allowNull: false,
         defaultValue: reservationStatus.PENDING
     })
-    declare res_status: string;
+    declare res_status: ReservationStatus;
 
     @Column({
         type: DataType.INTEGER,

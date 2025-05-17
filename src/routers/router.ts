@@ -188,7 +188,8 @@ router.post('/reservations/create/:usr_id/:flt_id',
         .trim()
         .notEmpty().withMessage('No puede ir vacia la cantidad de personas de la reserva')
         .isInt({ min: 1 }).withMessage('No puede ir vacia la cantidad de personas de la reserva'),
-
+    handleInputErrors,
+    ReservationController.createReservation
 )
 
 //Patch

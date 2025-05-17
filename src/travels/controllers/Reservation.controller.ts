@@ -37,7 +37,9 @@ export class ReservationController {
             const newReservation = new Reservation(req.body)
             newReservation.res_usr_id = user.usr_id
             newReservation.res_flt_id = flight.flt_id
+            flight.flt_total_seats -= res_count_consumer
 
+            await flight.save()
             await newReservation.save()
             res.status(201).send('Reserva creada')
         } catch (error) {
