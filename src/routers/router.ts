@@ -3,6 +3,8 @@ import { body, param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 import { userExists } from "../auth/middleware/user.mid";
 import { UserController } from "../auth/controllers/User.controller";
+import { flightExists } from "../travels/middlewares/flights.mid";
+import { FlightController } from "../travels/controllers/Flight.controller";
 
 const router = Router();
 
@@ -70,5 +72,80 @@ router.put('/users/:usr_id',
 // Deletes
 router.delete('/users/:usr_id', UserController.deleteUser)
 
+
+// |---------------| | Flights | |---------------|
+
+router.param('flt_id',
+    param('flt_id')
+        .trim()
+        .isString().withMessage('Identificador no válido')
+        .isUUID(4).withMessage('Identificador no válido'),
+)
+
+router.param('flt_id', handleInputErrors)
+router.param('flt_id', flightExists)
+
+// Gets
+router.get('/flights', FlightController.getAllFlights)
+router.get('/flights/:flt_id', FlightController.getFlightById)
+
+// Posts
+router.post('/flights',
+    body('flt_flight_number')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el numero de vuelo'),
+    body('flt_origin')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el lugar de origen'),
+    body('flt_destination')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el lugar de destino'),
+    body('flt_departure_time')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacia la hora de salida'),
+    body('flt_arrival_time')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacia la hora de llegada'),
+    body('flt_total_seats')
+        .notEmpty().withMessage('No puede ir vacio el total de asientos')
+        .isInt({ min: 15 }).withMessage('No puede ir vacio el total de asientos'),
+    body('flt_price'),
+    body('flt_is_active')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el '),
+    handleInputErrors,
+    FlightController.createFlight
+)
+
+// Puts
+router.put('/flights',
+    body('flt_flight_number')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el numero de vuelo'),
+    body('flt_origin')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el lugar de origen'),
+    body('flt_destination')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el lugar de destino'),
+    body('flt_departure_time')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacia la hora de salida'),
+    body('flt_arrival_time')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacia la hora de llegada'),
+    body('flt_total_seats')
+        .notEmpty().withMessage('No puede ir vacio el total de asientos')
+        .isInt({ min: 15 }).withMessage('No puede ir vacio el total de asientos'),
+    body('flt_price'),
+    body('flt_is_active')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el '),
+    handleInputErrors,
+    FlightController.updateFlight
+)
+
+// Deletes
+router.delete('/flights/:flt_id', FlightController.deleteFlight)
 
 export default router;
