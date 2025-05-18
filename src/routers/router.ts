@@ -175,6 +175,7 @@ router.param('res_id', reservationExists)
 // Gets
 router.get('/reservations', ReservationController.getAllReservations)
 router.get('/reservations/:res_id', ReservationController.getReservationById)
+router.get('/reservations/user/:usr_id', ReservationController.getAllReservationsByUser)
 
 // Posts
 router.post('/reservations/create/:usr_id/:flt_id',
@@ -194,9 +195,14 @@ router.post('/reservations/create/:usr_id/:flt_id',
 
 //Patch
 router.post('/reservations/state/:usr_id/:flt_id',
-
+    body('res_status')
+        .trim()
+        .notEmpty().withMessage('No puede ir vacio el estado de la reserva'),
     handleInputErrors,
     ReservationController.updateReservation
 )
+
+// Deletes
+router.delete('/reservations/:res_id', ReservationController.deleteReservation)
 
 export default router;

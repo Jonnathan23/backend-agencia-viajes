@@ -22,6 +22,16 @@ export class ReservationController {
         }
     }
 
+    static getAllReservationsByUser = async (req: Request, res: Response) => {
+        try {
+            const user = req.user
+            const reservationsFound = await Reservation.findAll({ where: { res_usr_id: user.usr_id } })
+            res.status(200).send(reservationsFound)
+        } catch(error) {
+            res.status(500).json({ errors: error })
+        }
+    }
+
     //post
     static createReservation = async (req: Request, res: Response) => {
         try {
